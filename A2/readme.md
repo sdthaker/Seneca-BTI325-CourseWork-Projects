@@ -4,9 +4,7 @@
 
 ## Objective:
 
-#### Create and publish a web app that uses multiple routes which serve static files (HTML & CSS) as well as create
-
-#### a "data service" module for accessing data. This will serve as the "scaffolding" for future assignments.
+Create and publish a web app that uses multiple routes which serve static files (HTML & CSS) as well as create a "data service" module for accessing data. This will serve as the "scaffolding" for future assignments.
 
 ## Specification:
 
@@ -122,28 +120,9 @@
 
 #### Step 3: Adding additional Routes:
 
-#### We will be making use of this employee data from a different location from our "/" and "/about" routes.
+We will be making use of this employee data from a different location from our "/" and "/about" routes. These routes will serve as the public-facing pieces of our application, whereas we will be dealing with employee management in a private area (later protected by a login page / user authentication, etc). Inside your server.js add routes to respond to the following "get" requests for the application. Once you have written the routes, test that they work properly by returning a confirmation string using res.send() and testing the server using localhost:8080. For example, localhost:8080/managers could be set up to return something like "TODO: get all employees who have isManager==true". This will help to confirm that your routes are set up properly.
 
-#### These routes will serve as the public-facing pieces of our application, whereas we will be dealing with
-
-#### employee management in a private area (later protected by a login page / user authentication, etc).
-
-#### Inside your server.js add routes to respond to the following "get" requests for the application. Once you have
-
-#### written the routes, test that they work properly by returning a confirmation string using res.send() and testing
-
-#### the server using localhost:8080. For example, localhost:8080/managers could be set up to return something
-
-#### like "TODO: get all employees who have isManager==true". This will help to confirm that your routes are set
-
-#### up properly.
-
-#### Important Note : Any response sending JSON from the server must include the correct content-type
-
-#### header - see res.json([body])
-
-#### Details to implement the following routes are available below in Step 4
-
+Important Note : Any response sending JSON from the server must include the correct content-type header - see res.json([body]) Details to implement the following routes are available below in Step 4
 
 #### /employees
 
@@ -173,41 +152,18 @@
 
 #### Step 4: Writing the data-service.js module:
 
-#### The promise driven data-service.js module will be responsible for reading the employees.json and
-
-#### departments.json files from within the " data " directory on the server, parsing the data into arrays of objects
-
-#### and returning elements (ie: " employee " objects) from those arrays to match queries on the data.
-
-#### Essentially the data-service.js module will encapsulate all the logic to work with the data and only expose
-
-#### accessor methods to fetch data/subsets of the data.
+The promise driven data-service.js module will be responsible for reading the employees.json and departments.json files from within the " data " directory on the server, parsing the data into arrays of objects and returning elements (ie: " employee " objects) from those arrays to match queries on the data. Essentially the data-service.js module will encapsulate all the logic to work with the data and only expose accessor methods to fetch data/subsets of the data. 
 
 #### Module Data
 
-#### The following two arrays should be declared "globally" within your module:
+The following two arrays should be declared "globally" within your module:
 
 - **employees** - type: **array**
 - **departments** - type: **array**
 
 #### Exported Functions
 
-#### Each of the below functions are designed to work with the employees and departments datasets. Since we
-
-#### have no way of knowing how long each function will take (we cannot assume that they will be instantaneous,
-
-#### ie: what if we move from .json files to a remote database, or introduce hundreds of thousands of objects into
-
-#### our .j son dataset? - this would increase lag time).
-
-#### Because of this, every one of the below functions must return a promise that passes the data via its " resolve "
-
-#### method (or - if no data was returned , passes an error message via its " reject " method).
-
-#### When we access these methods from the server.js file, we will be assuming that they return a promise and we
-
-#### will respond appropriately with .then() and. catch() (see "Updating the new routes..." below).
-
+Each of the below functions are designed to work with the employees and departments datasets. Since we have no way of knowing how long each function will take (we cannot assume that they will be instantaneous, ie: what if we move from .json files to a remote database, or introduce hundreds of thousands of objects into our .json dataset? - this would increase lag time). Because of this, every one of the below functions must return a promise that passes the data via its " resolve " method (or - if no data was returned , passes an error message via its " reject " method). When we access these methods from the server.js file, we will be assuming that they return a promise and we will respond appropriately with .then() and. catch() (see "Updating the new routes..." below).
 
 #### initialize()
 
@@ -244,65 +200,16 @@
     and pass a meaningful message, ie: "no results returned".
 
 #### Step 5: Updating the code surrounding app.listen()
-
-#### Before we start updating the routes in server.js to use our new data-service module, we must make a small
-
-#### update to the code surrounding the app.listen() call at the bottom of the server.js file. This is where the
-
-#### initialize() method from our data-service.js module comes into play.
-
-#### Fundamentally, initialize() is responsible for reading the .json files from the "data" folder and parsing the
-
-#### results to create the "global" (to the module) arrays, "employees" and "departments" that are used by the
-
-
-#### other functions. However, it also returns a promise that will only resolve successfully once the files were read
-
-#### correctly and the "employees" and "departments" arrays were correctly loaded with the data.
-
-#### Similarly, the promise will reject if any error occurred during the process. Therefore, we must only call
-
-#### app.listen() if our call to the initialize() method is successful, ie:. then(() => { //start the server }).
-
-#### If the initialize() method invoked reject , then we should not start the server (since there will be no data to
-
-#### fetch) and instead a meaningful error message should be sent to the console, ie: .catch(()=>{ /*output the
-
-#### error to the console */})
+              
+Before we start updating the routes in server.js to use our new data-service module, we must make a small update to the code surrounding the app.listen() call at the bottom of the server.js file. This is where the initialize() method from our data-service.js module comes into play. Fundamentally, initialize() is responsible for reading the .json files from the "data" folder and parsing the results to create the "global" (to the module) arrays, "employees" and "departments" that are used by the other functions. However, it also returns a promise that will only resolve successfully once the files were read correctly and the "employees" and "departments" arrays were correctly loaded with the data.
+Similarly, the promise will reject if any error occurred during the process. Therefore, we must only call app.listen() if our call to the initialize() method is successful, ie:. then(() => { //start the server }). If the initialize() method invoked reject , then we should not start the server (since there will be no data to
+fetch) and instead a meaningful error message should be sent to the console, ie: .catch(()=>{ /*output the error to the console */})
 
 #### Step 6: Updating the new routes to use data-service.js
 
-#### Now that the data-service.js module is complete, we must update our new routes (ie: /employees,
-
-#### /managers & /departments ) to make calls to the service and fetch data to be returned to the client. Recall:
-
-#### Any response sending JSON from the server must include the correct content-type header - see
-
-#### res.json([body]).
-
-#### Since our data-service.js file exposes functions that are guaranteed to return a promise that (if resolved
-
-#### successfully), will contain the requested data, we must make use of the .then() method when accessing the
-
-#### data from within our routes.
-
-#### For example, the /departments route must make a call to the getDepartments() method of the data-service.js
-
-#### module to fetch the correct data. If getDepartments() was successful, we can use .then((data) => { /*return
-
-#### JSON data*/ }) to access the data from the function and send the response back to the client.
-
-#### If any of the methods were unsuccessful however, the .then() method will not be called - the catch() method
-
-#### will be called instead. If this is the case, the server must return a simple JSON object with 1 property:
-
-#### "message" containing the message supplied in the .catch() method, ie: .catch((err) => { /* return err message
-
-#### in the JSON format: {message: err } */ }).
-
-#### By only calling res.json() from within .then() or .catch() we can ensure that the data will be in place (no matter
-
-#### how long it took to retrieve) before the server sends anything back to the client.
+Now that the data-service.js module is complete, we must update our new routes (ie: /employees, /managers & /departments ) to make calls to the service and fetch data to be returned to the client. Recall: Any response sending JSON from the server must include the correct content-type header - see res.json([body]). Since our data-service.js file exposes functions that are guaranteed to return a promise that (if resolved successfully), will contain the requested data, we must make use of the .then() method when accessing the data from within our routes.
+For example, the /departments route must make a call to the getDepartments() method of the data-service.js module to fetch the correct data. If getDepartments() was successful, we can use .then((data) => { /*return JSON data*/ }) to access the data from the function and send the response back to the client. If any of the methods were unsuccessful however, the .then() method will not be called - the catch() method will be called instead. If this is the case, the server must return a simple JSON object with 1 property:
+"message" containing the message supplied in the .catch() method, ie: .catch((err) => { /* return err message in the JSON format: {message: err } */ }). By only calling res.json() from within .then() or .catch() we can ensure that the data will be in place (no matter how long it took to retrieve) before the server sends anything back to the client.
 
 #### Step 7: Pushing to Heroku
 
