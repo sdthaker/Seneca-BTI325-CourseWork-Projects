@@ -38,19 +38,17 @@ o <li><a href="/images">Images</a></li>
 
 ```
 o GET /employees/add
-? This route simply sends the file "/views/addEmployee.html ". (see Step 3)
+- This route simply sends the file "/views/addEmployee.html ". (see Step 3)
 ```
 ```
 o GET /images/add
-? This route simply sends the file "/views/addImage.html. (see Step 4)
+- This route simply sends the file "/views/addImage.html. (see Step 4)
 ```
 #### Step 3: Adding new file 1: addEmployee.html
 
 - Create a new file in your "views" directory called "addEmployee.html" and open it for editing
 - use the following sample html
-    (https://seneca-
-    my.sharepoint.com/:u:/g/personal/sunny_shi_senecacollege_ca/EZU2zKKPzbFGky0XGz8wpeIBk
-    c6JJ-VvaOWiwxo1bmO57A?e=EnbmqY ) to reconstruct the "Add Employee" form. Change my
+    (https://seneca-my.sharepoint.com/:u:/g/personal/sunny_shi_senecacollege_ca/EZU2zKKPzbFGky0XGz8wpeIBkc6JJ-VvaOWiwxo1bmO57A?e=EnbmqY ) to reconstruct the "Add Employee" form. Change my
     name after <span class="navbar-brand" href="#"> with yours.
 - Ensure that the "Add Employee" item in the **<ul class="nav navbar-nav"> ...</ul>** element is the
     **only** <li> with the class "active" (this will make sure the correct navigation element is
@@ -61,9 +59,7 @@ o GET /images/add
 
 - Create a new file in your "views" directory called "addImage.html" and open it for editing
 - use the following sample html
-    (https://seneca-
-    my.sharepoint.com/:u:/g/personal/sunny_shi_senecacollege_ca/ESMmGXMybv9KgR-
-    9RHjIFsgB5FVY0raNPN1i9vEa5KgSSw?e=zcktST ) to reconstruct the "Add Image" form. Change
+    (https://seneca-my.sharepoint.com/:u:/g/personal/sunny_shi_senecacollege_ca/ESMmGXMybv9KgR-9RHjIFsgB5FVY0raNPN1i9vEa5KgSSw?e=zcktST ) to reconstruct the "Add Image" form. Change
     my name after <span class="navbar-brand" href="#"> with your name.
 
 #### Step 5: Adding a home for the uploaded Images
@@ -96,11 +92,11 @@ cb(null, Date.now() + path.extname(file.originalname));
 - Add the following route:
 
 ```
-o POST /images/add
+o POST /images/add?
 ```
 ```
-? This route uses the middleware: upload.single("imageFile")
-? When accessed, this route will redirect to "/images" (defined below)
+- This route uses the middleware: upload.single("imageFile")
+- When accessed, this route will redirect to "/images" (defined below)
 ```
 #### Step 3: Adding "Get" route / using the "fs" module
 
@@ -112,13 +108,13 @@ o POST /images/add
 o GET /images
 ```
 ```
-? This route will return a JSON formatted string (res.json()) consisting of a single
+- This route will return a JSON formatted string (res.json()) consisting of a single
 "images" property, which contains the contents of the
 "./public/images/uploaded" directory as an array, ie { "images":
 ["1518109363742.jpg", "1518109363743.jpg"] }.
 ```
 ```
-? HINT: You can make use of the fs.readdir method. Refer examples:
+- HINT: You can make use of the fs.readdir method. Refer examples:
 https://code-maven.com/list-content-of -directory-with-nodejs.
 ```
 #### Step 4: Verify your Solution
@@ -141,13 +137,13 @@ At this point, you should now be able to upload images using the "/images/add" r
 o POST /employees/add
 ```
 ```
-? This route makes a call to the (promise-driven) addEmployee(employeeData)
+- This route makes a call to the (promise-driven) addEmployee(employeeData)
 function from your data-service.js module (function to be defined below). It will
 provide req.body as the parameter, ie "data.addEmployee(req.body)".
 ```
 
 ```
-? When the addEmployee function resolves successfully, redirect to the
+- When the addEmployee function resolves successfully, redirect to the
 "/employees" route. Here we can verify that the new employee was added
 ```
 #### Step 3: Adding "addEmployee" function within data-service.js
@@ -183,76 +179,27 @@ At this point, you should now be able to add new employees using the "/employees
 
 #### Step 1: Update the "/employees" route
 
-- In addition to providing all of the employees, this route must now also support the
+- In addition to providing all of the employees, this route must now also support the following optional filters (via the query string)
 
-#### following optional filters (via the query string)
+   o /employees?status=value? return a JSON string consisting of all employees where value could be either "Full Time" or "Part Time" - this can be accomplished by calling the getEmployeesByStatus(status) function of your data-service (defined below)
+   
+   o /employees?department= value? return a JSON string consisting of all employees where value could be one of 1, 2, 3, ... 7 (there are currently 7 departments in the dataset) " - this can be accomplished by calling the getEmployeesByDepartment(department) function of your data-service (defined below)
+   
+   o /employees?manager= value? return a JSON string consisting of all employees where value could be one of 1, 2, 3, ... 30 (there are currently 30 managers in the dataset) " - this can be accomplished by calling the getEmployeesByManager(manager) function of your data-service (defined below)
 
-#### o /employees?status= value
-
-#### ? return a JSON string consisting of all employees where value could be
-
-#### either "Full Time" or "Part Time" - this can be accomplished by calling the
-
-#### getEmployeesByStatus(status) function of your data-service (defined
-
-#### below)
-
-#### o /employees?department= value
-
-#### ? return a JSON string consisting of all employees where value could be
-
-#### one of 1, 2, 3, ... 7 (there are currently 7 departments in the dataset) " -
-
-#### this can be accomplished by calling the
-
-#### getEmployeesByDepartment(department) function of your data-service
-
-#### (defined below)
-
-
-#### o /employees?manager= value
-
-#### ? return a JSON string consisting of all employees where value could be
-
-#### one of 1, 2, 3, ... 30 (there are currently 30 managers in the dataset) " -
-
-#### this can be accomplished by calling the
-
-#### getEmployeesByManager(manager) function of your data-service
-
-#### (defined below)
-
-#### o /employees
-
-#### ? return a JSON string consisting of all employees without any filter
-
-#### (existing functionality)
+   o /employees? return a JSON string consisting of all employees without any filter (existing functionality)
 
 #### Step 2: Add the "/employee/value" route
 
-- Note: the route is in singular format “employee”, which will respond with one single
+- Note: the route is in singular format “employee”, which will respond with one single employee. The previous route was “employees” (plural), which returns multiple results.
 
-#### employee. The previous route was “employees” (plural), which returns multiple results.
-
-- This route will return a JSON formatted string containing the employee whose
-
-#### employeeNum matches the value. For example, once the assignment is complete,
-
-#### localhost:8080/employee/6 would return the manager: Cassy Tremain - - this can be
-
-#### accomplished by calling the getEmployeeByNum(num) function of your data-service
-
-#### (defined below).
+- This route will return a JSON formatted string containing the employee whose employeeNum matches the value. For example, once the assignment is complete, localhost:8080/employee/6 would return the manager: Cassy Tremain - - this can be accomplished by calling the getEmployeeByNum(num) function of your data-service (defined below).
 
 - **Hint** : we are sending request by passing data through parameters.
 
-## Part 5: Updating "data-service.js" to support the new "Employee"
+## Part 5: Updating "data-service.js" to support the new "Employee" routes
 
-## routes
-
-#### Note : All of the below functions must return a promise (continuing with the pattern from the
-
-#### rest of the data-service.js module)
+#### Note : All of the below functions must return a promise (continuing with the pattern from the rest of the data-service.js module)
 
 #### Step 1: Add the getEmployeesByStatus(status) Function
 
