@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 function initialize() {
     return new Promise(function (resolve, reject) {
-        let db = mongoose.createConnection( MongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
+        let db = mongoose.createConnection( process.env.MongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
 
         db.on('error', (err) => {
             reject(err);
